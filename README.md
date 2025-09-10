@@ -86,10 +86,16 @@ Each commit updates this README by marking the status of features:
 
 ## Testing
 ### Backend (Pest)
-´´´php artisan test´´´
+´´´
+php artisan test
+´´´
 
 ### Frontend (Vitest)
-´´´npm run test´´´
+´´´
+npm run test
+´´´
 
 ### End-to-End (Cypress)*
-´´´npm run cypress:open´´´
+´´´
+npm run cypress:open
+´´´
