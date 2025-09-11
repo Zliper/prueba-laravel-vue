@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    protected array $headers = [
+        'Content-Type' => 'application/json'
+    ];
+
     public function register(Request $request)
     {
         $request->validate([
@@ -48,9 +51,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->user()?->currentAccessToken();
+        if($token){
+            $token->delete();
+            return response()->json(['message'=>'Logged out'], 200, $this->headers);
+        }
 
-        return response()->json(['message'=>'Logged out']);
+        return response()->json(['message'=>'No active token'], 200, $this->headers);
     }
 
     public function user(Request $request)

@@ -27,7 +27,7 @@ The goal is to create a project management system with Kanban boards and real-ti
 ## Feature Checklist
 
 ### Core
-- [ ] Registration / Login with Sanctum (**Pending**)
+- [x] Registration / Login with Sanctum
 - [ ] Project management (create, edit, archive, pagination, filters, roles) (**Pending**)
 - [ ] Kanban board with columns and drag & drop task reordering (**Pending**)
 - [ ] Task CRUD with priority, assignment, due date, tags, and comments (**Pending**)
@@ -86,16 +86,16 @@ Each commit updates this README by marking the status of features:
 
 ## Testing
 ### Backend (Pest)
-´´´
+```bash
 php artisan test
-´´´
+```
 
 ### Frontend (Vitest)
-´´´
+```bash
 npm run test
-´´´
+```
 
 ### End-to-End (Cypress)*
-´´´
+```bash
 npm run cypress:open
-´´´
+```
