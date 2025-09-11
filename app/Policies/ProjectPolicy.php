@@ -21,7 +21,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project): bool
     {
-        return $user->id === $project->owner_id;
+        return $project->users()->where('user_id', $user->id)->exists();
     }
 
     /**
@@ -37,7 +37,8 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->id === $project->owner_id;
+        $role = $project->users()->where('user_id', $user->id)->first()?->pivot->role;
+        return in_array($role, ['Owner', 'Manager']);
     }
 
     /**
@@ -45,7 +46,8 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        return $user->id === $project->owner_id;
+        $role = $project->users()->where('user_id', $user->id)->first()?->pivot->role;
+        return $role === 'Owner';
     }
 
     /**

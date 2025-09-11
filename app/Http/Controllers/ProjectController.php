@@ -16,12 +16,28 @@ class ProjectController extends Controller
         'Content-Type' => 'application/json'
     ];
 
-    public function index(){
-        $projects = Project::where('owner_id', Auth::id())->get();
+    public function index(Request $request){
+
+        $query = Project::where('owner_id',Auth::id());
+
+        if($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if($request->filled('description')) {
+            $query->where('description', 'like', '%' . $request->description . '%');
+        }
+
+        if($request->filled('archived')) {
+            $query->where('archived', filter_var($request->archived, FILTER_VALIDATE_BOOLEAN));
+        }
+
+        $projects = $query->paginate(10);
         return response()->json($projects, 200, $this->headers);
     }
 
     public function show(Project $project){
+        $project->load('users');
         $this->authorize('view', $project);
         return response()->json($project, 200, $this->headers);
     }
@@ -38,10 +54,13 @@ class ProjectController extends Controller
             'owner_id' => Auth::id(),
         ]);
 
+        $project->users()->attach(Auth::id(), ['role' => 'Owner']);
+
         return response()->json($project, 201, $this->headers);
     }
 
     public function update(Request $request, Project $project){
+        $project->load('users');
         $this->authorize('update', $project);
 
         $request->validate([
@@ -56,6 +75,7 @@ class ProjectController extends Controller
     }
 
     public Function destroy(Project $project){
+        $project->load('users');
         $this->authorize('delete',$project);
         $project->delete();
 
@@ -63,6 +83,7 @@ class ProjectController extends Controller
     }
 
     public Function archive(Request $request, Project $project){
+        $project->load('users');
         $this->authorize('update', $project);
 
         $request->validate([
